@@ -1,6 +1,10 @@
 from game.plane import Plane, PlaneType
 
-class AntiPigeon():
+class AntiPigeon:
+
+    def __init__(self, team):
+        self.team = team;
+
     def select_planes(self) -> dict[PlaneType, int]:
         return {}
 

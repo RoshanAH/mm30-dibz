@@ -14,6 +14,7 @@ class Strategy(BaseStrategy):
     bot1 = AntiPigeon()
 
     def select_planes(self) -> dict[PlaneType, int]:
+        print(f"team: {self.team}")
         if (self.team == 0):
             return bot0.select_planes()
         else:
