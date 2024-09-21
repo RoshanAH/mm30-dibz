@@ -1,5 +1,6 @@
 from game.base_strategy import BaseStrategy
 from game.plane import Plane, PlaneType
+
 from strategy.pigeon import *
 from strategy.anti_pigeon import *
 
