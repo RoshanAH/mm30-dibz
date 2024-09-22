@@ -32,15 +32,11 @@ def follow_point(p: Plane, v: Vector) -> float:
     target_heading = deg((lambda d: atan2(d.y, d.x))(v - p.position))
     turn_speed = p.stats.turn_speed
     delta_angle = angle_diff(target_heading, p.angle)
-    return copysign(abs(delta_angle) / turn_speed, delta_angle)
-
-
+    return copysign(min(abs(delta_angle) / turn_speed, 1), delta_angle)
 
 def hold_formation(planes: list[Plane], formation: list[Vector], pos: Vector, heading: float) -> list[float]:
     formation = [rotate(v, heading) + pos for v in formation]
-    return []
-
-
+    return [follow_point(p, pos) for p, pos in zip(planes, formation)]
 
 
 class Formation:
@@ -49,19 +45,15 @@ class Formation:
     def select_planes(self) -> dict[PlaneType, int]:
         # Select which planes you want, and what number
         return {
-            PlaneType.STANDARD: 2,
+            PlaneType.PIGEON: 100,
         }
     
     def steer_input(self, planes: dict[str, Plane]) -> dict[str, float]:
         friends = {id: plane for id, plane in planes.items() if plane.team == "friend"}
         enemies = {id: plane for id, plane in planes.items() if plane.team == "enemies"}
 
-        response = dict()
-        for id, plane in friends.items():
-            if id == "0":
-                response[id] = -1 if self.turn % 4 >= 2 else 1
 
-            if id == "1":
-                response[id] = follow_point(plane, Vector(20, 0))
+        steer = hold_formation(list(friends.values()), [Vector(x - 49.5, 0) for x in range(0, 100)], Vector(0, 0), 0)
+        response = {id: s for id, s in zip(friends.keys(), steer)}
         self.turn += 1
         return response

@@ -11,6 +11,7 @@ from strategy.balls import Balls
 
 class Strategy(BaseStrategy):
     bots = (formation.Formation(), Balls())
+    # bots = (Balls(), formation.Formation())
 
     def select_planes(self) -> dict[PlaneType, int]:
         print(f"team: {self.team}")
