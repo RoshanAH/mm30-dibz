@@ -5,6 +5,7 @@ from game.plane import Plane, PlaneType
 from strategy.base import Base
 from strategy.great_wall import GreatWall
 from strategy.beyblade import beyblade
+from strategy.skibidi import Skibidi
 
 from strategy.balls import Balls
 from strategy.amongus import Amongus
@@ -16,7 +17,7 @@ from strategy.balls2 import Balls2
 # You can also add other files under the strategy/ folder and import them
 
 class Strategy(BaseStrategy):
-    bots = (Balls(), beyblade())
+    bots = (Balls(), Skibidi())
 
     def select_planes(self) -> dict[PlaneType, int]:
         print(f"team: {self.team}")
