@@ -11,13 +11,7 @@ def angle(a: Vector) -> float:
     return degrees(atan2(a.y, a.x)) % 360
 
 def angle_diff(a2: float, a1: float) -> float:
-    a1 %= 360
-    a2 %= 360
-    cc = a2 - a1
-    c  = -copysign(360 - abs(cc), cc)
-    if abs(cc) < 180:
-        return cc
-    return c
+    return cc if abs(cc := (a2 % 360) - (a1 % 360)) < 180 else copysign(abs(cc) - 360, cc)
 
 def steer_away_from_wall(plane: Plane) -> float:
     # Find the closest wall
@@ -27,8 +21,7 @@ def steer_away_from_wall(plane: Plane) -> float:
         Vector(plane.position.x, 50),
         Vector(plane.position.x, -50),
     ]
-    closest_wall = min(walls, key=lambda wall: (wall - plane.position).norm())
-    return steer_away_from_point(plane, closest_wall)
+    return steer_away_from_point(plane, min(walls, key=lambda wall: (wall - plane.position).norm()))
 
 def steer_away_from_point(plane: Plane, point: Vector) -> float:
     # Find the angle to the point
@@ -53,9 +46,9 @@ class Skibidi:
     def select_planes(self) -> dict[PlaneType, int]:
         return {
             PlaneType.STANDARD: 1,
+            PlaneType.FLYING_FORTRESS: 1,
             PlaneType.THUNDERBIRD: 1,
-            PlaneType.FLYING_FORTRESS: 2,
-            # PlaneType.PIGEON: 10,
+            PlaneType.PIGEON: 30,
         }
 
     def steer_to_point(self, plane: Plane, target: Vector) -> float:
