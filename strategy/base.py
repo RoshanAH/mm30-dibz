@@ -1,5 +1,6 @@
 from game.plane import Plane, PlaneType
 import random
+from game.base_strategy import BaseStrategy
 
 class Base:
     my_counter = 0
