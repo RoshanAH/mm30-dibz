@@ -17,7 +17,7 @@ from strategy.balls2 import Balls2
 # You can also add other files under the strategy/ folder and import them
 
 class Strategy(BaseStrategy):
-    bots = (Amongus(), Skibidi())
+    bots = (Skibidi(), Skibidi())
 
     def select_planes(self) -> dict[PlaneType, int]:
         return self.bots[int(self.team)].select_planes()
