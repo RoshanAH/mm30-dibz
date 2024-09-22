@@ -30,10 +30,11 @@ class Strategy(BaseStrategy):
             if plane.position.y > boundary or plane.position.y < -boundary or plane.position.x > boundary or plane.position.x < -boundary:
                 self.my_steers[id] = -1
             else:
-                self.my_steers[id] = random.random() * 2 - 1
+                self.my_steers[id] = random.random() * 2 - 1 # 
             response[id] = self.my_steers[id]
 
         self.my_counter += 1
 
         # Return the steers
         return response
+            
