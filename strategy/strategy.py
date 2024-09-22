@@ -2,11 +2,11 @@ import dataclasses
 from game.base_strategy import BaseStrategy
 from game.plane import Plane, PlaneType
 
+from strategy import pigeon_grid, balls2, amongus
 from strategy.base import Base
 from strategy.great_wall import GreatWall
 from strategy.beyblade import beyblade
 from strategy.skibidi import Skibidi
-
 from strategy.balls import Balls
 from strategy.amongus import Amongus
 from strategy.bigballs import BigBalls
@@ -20,7 +20,6 @@ class Strategy(BaseStrategy):
     bots = (Amongus(), Skibidi())
 
     def select_planes(self) -> dict[PlaneType, int]:
-        print(f"team: {self.team}")
         return self.bots[int(self.team)].select_planes()
 
     def steer_input(self, planes: dict[str, Plane]) -> dict[str, float]:
@@ -28,7 +27,8 @@ class Strategy(BaseStrategy):
 
 
 def map_plane(team, plane: Plane) -> Plane:
-    out = dataclasses.replace(plane)
+    # out = dataclasses.replace(plane)
+    out = plane
     out.team = "friend" if team == plane.team else "enemy"
     if team == 0:
         out.angle = (out.angle + 180) % 360
