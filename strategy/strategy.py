@@ -2,14 +2,15 @@ import dataclasses
 from game.base_strategy import BaseStrategy
 from game.plane import Plane, PlaneType
 
-from strategy import pigeon_grid, fighter, skibidi
+from strategy import pigeon_grid, fighter, skibidi, balls
 # The following is the heart of your bot. This controls what your bot does.
 # Feel free to change the behavior to your heart's content.
 # You can also add other files under the strategy/ folder and import them
 
 class Strategy(BaseStrategy):
     # bots = (pigeon_grid.PigeonGrid(), fighter.Fighter())
-    bots = (skibidi.Skibidi(), fighter.Fighter())
+    # bots = (skibidi.Skibidi(), fighter.Fighter())
+    bots = (balls.Balls(), fighter.Fighter())
 
     def select_planes(self) -> dict[PlaneType, int]:
         return self.bots[int(self.team)].select_planes()
