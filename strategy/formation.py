@@ -47,7 +47,6 @@ def hold_formation(
 ) -> list[float]:
     formation = [rotate(v, heading) + pos for v in formation]
     return [follow_point(p, v) for p, v in zip(planes, formation)]
-    # return [plane_find_path_to_point(v, p)[0] for p, v in zip(planes, formation)]
 
 
 class Formation:
@@ -57,6 +56,7 @@ class Formation:
         # Select which planes you want, and what number
         return {
             PlaneType.PIGEON: 100,
+            # PlaneType.SCRAPYARD_RESCUE: 10,
         }
 
     def steer_input(self, planes: dict[str, Plane]) -> dict[str, float]:
@@ -65,10 +65,15 @@ class Formation:
 
         alive = len(friends.values())
 
-        steer = hold_formation(list(friends.values()), [Vector(x * 80 / alive - 40, 0) for x in range(0, len(friends.values()))], Vector(0, 30), 0)
-        response = {id: s for id, s in zip(friends.keys(), steer)}
+        steer = hold_formation(
+            list(friends.values()),
+            [Vector(x * 90 / alive - 45, 0) for x in range(0, len(friends.values()))],
+            Vector(0, 0),
+            self.turn * 0.5,
+        )
+        response = dict(zip(friends.keys(), steer))
         # response = dict()
         # for id, plane in friends.items():
         #     response[id] = follow_point(plane, Vector(10, 30))
-        # self.turn += 1
+        self.turn += 1
         return response
