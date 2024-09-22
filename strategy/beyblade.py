@@ -23,12 +23,13 @@ class beyblade:
     let_it_rip: dict[str, bool] = {}
     drop_radii: dict[str, float] = {}
     my_steers: dict[str, float] = {}
-    stagger_turns = 20
+    stagger_turns = 19
     
     def select_planes(self) -> dict[PlaneType, int]:
         # Select which planes you want, and what number
         return {
             PlaneType.FLYING_FORTRESS: 3,
+            # PlaneType.SCRAPYARD_RESCUE: 1,
         }
     
     def steer_input(self, planes: dict[str, Plane]) -> dict[str, float]:
@@ -42,7 +43,7 @@ class beyblade:
         # not_my_planes = {id: plane for id, plane in planes.items() if plane.team == "enemy"}
         if self.stagger_turns > 0:
             self.stagger_turns -= 1
-            return {id: -copysign(1, plane.position.x) * min(1, abs(plane.position.x/5)) for id, plane in my_planes.items()}
+            return {id: copysign(1, plane.position.x * plane.position.y) * min(1, abs(plane.position.x/5)) for id, plane in my_planes.items()}
 
         for id, plane in my_planes.items():
             if self.let_it_rip[id]:

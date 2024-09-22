@@ -11,7 +11,7 @@ from strategy.beyblade import beyblade
 # You can also add other files under the strategy/ folder and import them
 
 class Strategy(BaseStrategy):
-    bots = (GreatWall(), beyblade())
+    bots = (beyblade(), beyblade())
 
     def select_planes(self) -> dict[PlaneType, int]:
         print(f"team: {self.team}")
