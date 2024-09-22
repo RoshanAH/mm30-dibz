@@ -11,7 +11,7 @@ from strategy.anti_pigeon import *
 # You can also add other files under the strategy/ folder and import them
 
 class Strategy(BaseStrategy):
-    bots = (AntiPigeon(), AntiPigeon())
+    bots = (AntiPigeon(), BetterPigeon())
 
 
     def select_planes(self) -> dict[PlaneType, int]:
