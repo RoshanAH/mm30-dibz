@@ -84,25 +84,18 @@ class Skibidi:
 
         not_my_planes = {id: plane for id, plane in planes.items() if plane.team == "enemy"}
 
-        if self.stagger_turns > 0:
-            self.stagger_turns -= 1
+        self.stagger_turns -= 1
 
         hunted_targets = {}
         for id, plane in hunters.items():
             if self.stagger_turns > 0:
-                response[id] = -copysign((50-abs(plane.position.x)) / 50, plane.position.x)
+                response[id] = -copysign(plane.position.x / 5, plane.position.x)
                 continue
 
             
             def distance_heuristic(id):
-                dist = (diff := not_my_planes[id].position - plane.position).norm() ** 2
-                if plane.type == PlaneType.STANDARD:
-                    dist *= abs(angle_diff(angle(diff), plane.angle)) ** (1/4)
-                elif plane.type == PlaneType.THUNDERBIRD:
-                    dist *= abs(angle_diff(angle(diff), plane.angle)) ** (1/4)
-                elif plane.type == PlaneType.FLYING_FORTRESS:
-                    dist *= abs(angle_diff(angle(diff), plane.angle)) ** .25
-                return dist
+                next_pos = (enemy := not_my_planes[id]).position + enemy.stats.speed * Vector(cos(radians(enemy.angle)), sin(radians(enemy.angle)))
+                return (diff := next_pos - plane.position).norm() ** 2 * abs(angle_diff(angle(diff), plane.angle)) ** .1
 
             closest_enemies = sorted([id_ for id_ in not_my_planes if id_ not in hunted_targets], key=distance_heuristic)
 
@@ -110,15 +103,23 @@ class Skibidi:
             for id_ in closest_enemies:
                 if len(closest_enemies) == 1:
                     enemy = not_my_planes[id_]
-                    steer = self.steer_to_point(plane, enemy.position)
+                    new_pos = enemy.position + enemy.stats.speed * Vector(cos(radians(enemy.angle)), sin(radians(enemy.angle)))
+                    steer = self.steer_to_point(plane, new_pos)
                     response[id] = steer
                     hunted_targets[id] = id_
                     break
 
-                # if id_ in hunted_targets.values():
-                    # continue
+                if id_ in hunted_targets.values():
+                    continue
                 enemy = not_my_planes[id_]
-                steer = self.steer_to_point(plane, enemy.position)
+                new_pos = enemy.position + enemy.stats.speed * Vector(cos(radians(enemy.angle)), sin(radians(enemy.angle))) 
+                # interceptor_pos 
+                # Implementing proportional navigation
+                pronav_pos = plane.position + (enemy.position - plane.position) * (enemy.stats.speed / (enemy.stats.speed + plane.stats.speed))
+                if (enemy.position - plane.position).norm() > 10 and abs(angle_diff(angle(enemy.position - plane.position), plane.angle)) < 50:
+                    steer = self.steer_to_point(plane, pronav_pos)
+                else:
+                    steer = self.steer_to_point(plane, new_pos)
                 if steer_causes_crash(steer, plane, 3):
                     if not warned:
                         print("WARN!", end="")
@@ -127,7 +128,7 @@ class Skibidi:
                         print("!", end="")
                     continue
                 response[id] = steer
-                # hunted_targets[id] = id_
+                hunted_targets[id] = id_
                 if warned:
                     print()
                 break
@@ -150,7 +151,7 @@ class Skibidi:
                 enemy_pos_next_turn = enemy.position + enemy.stats.speed * Vector(cos(radians(enemy.angle)), sin(radians(enemy.angle)))
                 enemy_cone_pos = enemy.position + enemy.stats.attack_range * Vector(cos(radians(enemy.angle)), sin(radians(enemy.angle))) * 0.75
                 next_enemy_cone_pos = enemy_pos_next_turn + enemy.stats.attack_range * Vector(cos(radians(enemy.angle)), sin(radians(enemy.angle))) * 2
-                if (enemy.type != PlaneType.PIGEON and ((enemy_cone_pos - my_pos_next_turn).norm() < 5 or (next_enemy_cone_pos - my_pos_next_turn).norm() < 7)):
+                if (enemy.type != PlaneType.PIGEON and ((enemy_cone_pos - my_pos_next_turn).norm() < 5 or (next_enemy_cone_pos - my_pos_next_turn).norm() < 8)):
                     response[id] = steer_away_from_point(plane, enemy_cone_pos)
                     break
                 if (enemy_pos_next_turn - my_pos_next_turn).norm() < 4 - 1 * (enemy.type == PlaneType.PIGEON) \
