@@ -62,10 +62,36 @@ COMMANDS_FOR_OPPONENT: dict[RunOpponent, list[tuple[str, str]]] = {
     ],
 }
 
+def determine_python():
+    try:
+        subprocess.run("python3 --version", shell=True, check=True, capture_output=True, text=True)
+        return "python3"
+    except subprocess.CalledProcessError:
+        pass
+    except FileNotFoundError:
+        pass
+
+    # If python3 fails, try python
+    try:
+        subprocess.run("python --version", shell=True, check=True, capture_output=True, text=True)
+        return "python"
+    except subprocess.CalledProcessError:
+        pass
+    except FileNotFoundError:
+        pass
+
+    return None
+
 
 def run(opponent: RunOpponent):
     if engine:
         engine.update_if_not_latest()
+
+    python = determine_python()
+
+    if not python:
+        print("Failed to find python in shell")
+        exit(1)
 
     print(
         f"Running against opponent {opponent.value}... (might take a minute, please wait)"
@@ -91,6 +117,7 @@ def run(opponent: RunOpponent):
     # Launch each command in a separate terminal
     processes: list[subprocess.Popen] = []
     for i, command in enumerate(commands):
+        command = command.replace("python", python)
         process = subprocess.Popen(
             command,
             shell=True,

@@ -25,7 +25,7 @@ visualize the game's progress and end result.
 
 ### NPM / Node
 
-First, you'll need [**Node**](https://nodejs.org/en/download/prebuilt-binaries). You can check if you have it installed by running:
+First, you'll need [**Node**](https://nodejs.org/en/download/prebuilt-installer). You can check if you have it installed by running:
 ```sh
 npm --version
 ```

@@ -25,6 +25,8 @@ class Vector:
     def __mul__(self, o):
         return Vector(o*self.x, o*self.y)
     def __eq__(self, o):
+        if not isinstance(o, Vector):
+            return False
         return self.x == o.x and self.y == o.y
     def __neg__(self):
         return Vector(-self.x, -self.y)
@@ -56,7 +58,7 @@ class PlaneStats:
             plane = PlaneStats(
                 blob["speed"],
                 blob["turnSpeed"],
-                blob["health"],
+                blob["maxHealth"],
                 blob["attackSpreadAngle"],
                 blob["attackRange"],
             )
