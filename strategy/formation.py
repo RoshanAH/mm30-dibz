@@ -68,8 +68,8 @@ class Formation:
         steer = hold_formation(
             list(friends.values()),
             [Vector(x * 90 / alive - 45, 0) for x in range(0, len(friends.values()))],
-            Vector(0, 0),
-            self.turn * 0.5,
+            Vector(0, -45 + max(0, (self.turn - 100) * 0.5)),
+            0
         )
         response = dict(zip(friends.keys(), steer))
         # response = dict()

@@ -11,10 +11,10 @@ from strategy.balls import Balls
 
 class Strategy(BaseStrategy):
     # bots = (formation.Formation(), Balls())
-    bots = (Balls(), formation.Formation())
+    # bots = (Balls(), formation.Formation())
+    bots = (formation.Formation(), formation.Formation())
 
     def select_planes(self) -> dict[PlaneType, int]:
-        print(f"team: {self.team}")
         return self.bots[int(self.team)].select_planes()
 
     def steer_input(self, planes: dict[str, Plane]) -> dict[str, float]:
@@ -22,9 +22,10 @@ class Strategy(BaseStrategy):
 
 
 def map_plane(team, plane: Plane) -> Plane:
-    out = dataclasses.replace(plane)
+    # out = dataclasses.replace(plane)
+    out = plane
     out.team = "friend" if team == plane.team else "enemy"
-    if team == "0":
+    if team == 0:
         out.angle = (out.angle + 180) % 360
         out.position = -1 * out.position
     return out
