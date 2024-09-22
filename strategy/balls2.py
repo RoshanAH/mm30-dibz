@@ -16,8 +16,9 @@ class Balls2():
     def select_planes(self) -> dict[PlaneType, int]:
         # Select which planes you want, and what number
         return {
-            PlaneType.PIGEON: 80,
-            PlaneType.THUNDERBIRD: 1,
+            PlaneType.PIGEON: 50,
+            PlaneType.FLYING_FORTRESS: 1,
+            PlaneType.STANDARD: 1,
         }
     
     def steer_input(self, planes: dict[str, Plane]) -> dict[str, float]:
@@ -25,8 +26,9 @@ class Balls2():
         
         all_pigeon = True 
         for id, plane in planes.items():
-            if plane.type != PlaneType.PIGEON:
+            if plane.team == "enemy" and plane.type != PlaneType.PIGEON:
                 all_pigeon = False
+
         for id, plane in planes.items():
             if plane.team == "enemy":
                 continue
@@ -63,8 +65,7 @@ class Balls2():
 
                 if max(abs(plane.position.x), abs(plane.position.y)) >= 47.5: # Don't fall off edge
                     self.my_steers[id] = -1
-            
-            if plane.type == PlaneType.THUNDERBIRD:
+            else:
                 current_x = plane.position.x
                 current_y = plane.position.y
                 closest_enemy_x = 0
@@ -88,8 +89,27 @@ class Balls2():
                     steering_direction = -1
 
                 self.my_steers[id] = steering_direction
-                if max(abs(plane.position.x), abs(plane.position.y)) >= 45: # Don't fall off edge
-                    self.my_steers[id] = -1
+                bound = 40
+                if plane.position.x > bound:
+                    if plane.angle > 0 and plane.angle < 180:
+                        self.my_steers[id] = 1
+                    else:
+                        self.my_steers[id] = -1
+                elif plane.position.x < -bound:
+                    if plane.angle > 180:
+                        self.my_steers[id] = 1
+                    else:
+                        self.my_steers[id] = -1
+                elif plane.position.y > bound:
+                    if plane.angle > 90:
+                        self.my_steers[id] = 1
+                    else:
+                        self.my_steers[id] = -1
+                elif plane.position.y < -bound:
+                    if plane.angle > 270:
+                        self.my_steers[id] = 1
+                    else:
+                        self.my_steers[id] = -1
             response[id] = self.my_steers[id]
 
         self.my_counter += 1
