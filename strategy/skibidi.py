@@ -67,10 +67,10 @@ class Skibidi:
     def select_planes(self) -> dict[PlaneType, int]:
         return {
             # PlaneType.STANDARD: 3,
-            PlaneType.FLYING_FORTRESS: 1,
+            # PlaneType.FLYING_FORTRESS: 1,
             # PlaneType.PIGEON: 10,
-            PlaneType.THUNDERBIRD: 3,
-            PlaneType.SCRAPYARD_RESCUE: 1,
+            PlaneType.THUNDERBIRD: 5,
+            # PlaneType.SCRAPYARD_RESCUE: 1,
         }
 
     def steer_to_point(self, plane: Plane, target: Vector) -> float:
@@ -164,6 +164,44 @@ class Skibidi:
                     del hunted_targets[id]
 
 
+
+        self.grid_box = (-40, min(-35 + self.turn * 0.1, 40), 80, 5)
+        pigeons_alive = len(pigeons.values())
+        if pigeons_alive == 0:
+            return response
+        grid_space = (self.grid_box[2] * self.grid_box[3] / pigeons_alive) ** 0.5
+
+        pigeon_formation = [
+            Vector(
+                self.grid_box[0] + (i % int(self.grid_box[2] / grid_space)) * grid_space + grid_space * 0.5,
+                self.grid_box[1] - (i // int(self.grid_box[2] / grid_space)) * grid_space - grid_space * 0.5,
+            )
+            for i in range(pigeons_alive)
+        ]
+
+        pigeon_steer = hold_formation(list(pigeons.values()), pigeon_formation, Vector(0, 0), 0)
+        pigeon_response = dict(zip(pigeons.keys(), pigeon_steer))
+
+        to_attack: set[str] = set()
+        for idx, enemy in not_my_planes.items():
+            enemy_pos = enemy.position
+            if enemy_pos.y <= self.grid_box[1] + 20 and enemy_pos.y > self.grid_box[1] - self.grid_box[3] - 30:
+                to_attack.add(idx)
+
+        for idx, pigeon in pigeons.items():
+            closest_dist = 0
+            closest = None
+            for e in to_attack:
+                dist = (planes[e].position - pigeon.position).norm()
+                if (closest is None or dist < closest_dist):
+                    closest = e
+                    closest_dist = dist
+            if (closest is not None and closest_dist < 10):
+                pigeon_response[idx] = follow_point(pigeon, planes[closest].position)
+
+        self.turn += 1
+
+        response |= pigeon_response
 
         self.grid_box = (-40, min(-35 + self.turn * 0.1, 40), 80, 5)
         pigeons_alive = len(pigeons.values())
