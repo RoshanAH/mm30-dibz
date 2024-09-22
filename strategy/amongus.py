@@ -1,8 +1,7 @@
 from game.plane import Plane, PlaneType
 import random
-from game.base_strategy import BaseStrategy
 
-class Base:
+class Amongus():
     my_counter = 0
     my_steers = dict()
     

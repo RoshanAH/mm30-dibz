@@ -3,14 +3,14 @@ from game.base_strategy import BaseStrategy
 from game.plane import Plane, PlaneType
 
 from strategy import formation, base
+from strategy.balls import Balls
 
 # The following is the heart of your bot. This controls what your bot does.
 # Feel free to change the behavior to your heart's content.
 # You can also add other files under the strategy/ folder and import them
 
 class Strategy(BaseStrategy):
-    bots = (formation.Formation(), base.Base())
-
+    bots = (formation.Formation(), Balls())
 
     def select_planes(self) -> dict[PlaneType, int]:
         print(f"team: {self.team}")
