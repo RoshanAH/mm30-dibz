@@ -3,7 +3,7 @@ from game.base_strategy import BaseStrategy
 from game.plane import Plane, PlaneType
 
 from strategy import pigeon_grid, balls2, amongus
-from strategy.base import Base
+# from strategy.base import Base
 from strategy.great_wall import GreatWall
 from strategy.beyblade import beyblade
 from strategy.skibidi import Skibidi
@@ -12,6 +12,7 @@ from strategy.amongus import Amongus
 from strategy.bigballs import BigBalls
 from strategy.ballsreal import BallsReal
 from strategy.balls2 import Balls2
+from strategy.fighter import Fighter
 # The following is the heart of your bot. This controls what your bot does.
 # Feel free to change the behavior to your heart's content.
 # You can also add other files under the strategy/ folder and import them
@@ -21,7 +22,7 @@ class Strategy(BaseStrategy):
     # bots = (skibidi.Skibidi(), fighter.Fighter())
     # bots = (balls.Balls(), fighter.Fighter())
     # bots = (balls2.Balls2(), fighter.Fighter())
-    bots = (amongus.Amongus(), fighter.Fighter())
+    bots = (Skibidi(), Fighter())
 
     def select_planes(self) -> dict[PlaneType, int]:
         return self.bots[int(self.team)].select_planes()

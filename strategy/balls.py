@@ -1,0 +1,1 @@
+class Balls(): select_planes, steer_input = lambda self: { __import__("game").plane.PlaneType.PIGEON: 100 }, lambda self, planes: {i: __import__("random").random() * 2 * (d.team != "enemy" and max(abs((p := d.position).y), abs(p.x)) <= 47.5) - 1 for i, d in planes.items()}
