@@ -9,17 +9,18 @@ from strategy.anti_pigeon import *
 
 class Strategy(BaseStrategy):
 
-    bot0 = Pigeon()
-    bot1 = AntiPigeon()
+    def __init__(self):
+        self.bot0 = AntiPigeon("0")
+        self.bot1 = AntiPigeon("1")
 
     def select_planes(self) -> dict[PlaneType, int]:
-        if (self.team == 0):
-            return bot0.select_planes()
+        if (self.team == "0"):
+            return self.bot0.select_planes()
         else:
-            return bot1.select_planes()
+            return self.bot1.select_planes()
 
     def steer_input(self, planes: dict[str, Plane]) -> dict[str, float]:
-        if (self.team == 0):
-            return bot0.steer_input(planes)
+        if (self.team == "0"):
+            return self.bot0.steer_input(planes)
         else:
-            return bot1.select_planes(planes)
+            return self.bot1.steer_input(planes)
