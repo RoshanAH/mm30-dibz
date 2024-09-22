@@ -76,11 +76,6 @@ class Skibidi:
 
             closest_enemies = sorted([id_ for id_ in not_my_planes if id_ not in hunted_targets], key=distance_heuristic)
 
-            # if id not in self.previous_targets:
-                # self.previous_targets[id] = (closest_enemies[0], 0)
-
-            # previous_target, turns_followed = self.previous_targets[id]
-
             warned = False
             for id_ in closest_enemies:
                 if len(closest_enemies) == 1:
@@ -93,9 +88,6 @@ class Skibidi:
                 if id_ in hunted_targets.values():
                     continue
                 enemy = not_my_planes[id_]
-                # future_enemy_position = enemy.position + enemy.stats.speed * Vector(cos(radians(enemy.angle)), sin(radians(enemy.angle)))
-                # averaged_enemy_position = (enemy.position + future_enemy_position)
-                # averaged_enemy_position = Vector(averaged_enemy_position.x / 2, averaged_enemy_position.y / 2)
                 steer = self.steer_to_point(plane, enemy.position)
                 if steer_causes_crash(steer, plane, 3):
                     if not warned:
@@ -108,10 +100,6 @@ class Skibidi:
                 hunted_targets[id] = id_
                 if warned:
                     print()
-                # if id_ != previous_target:
-                    # self.previous_targets[id] = (id_, 1)
-                # else:
-                    # self.previous_targets[id] = (id_, turns_followed + 1)
                 break
             
             if id not in response:
