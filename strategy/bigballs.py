@@ -12,7 +12,7 @@ class BigBalls():
         # Select which planes you want, and what number
         return {
             PlaneType.FLYING_FORTRESS: 3,
-            PlaneType.SCRAPYARD_RESCUE: 1,
+            PlaneType.PIGEON: 10,
         }
     
     def steer_input(self, planes: dict[str, Plane]) -> dict[str, float]:
