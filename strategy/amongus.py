@@ -4,38 +4,48 @@ import random
 class Amongus():
     my_counter = 0
     my_steers = dict()
+    my_target = dict()
+    reached = dict()
+    counter_since = dict()
     
     def select_planes(self) -> dict[PlaneType, int]:
         # Select which planes you want, and what number
         return {
-            PlaneType.STANDARD: 1,
-            PlaneType.FLYING_FORTRESS: 1,
-            PlaneType.THUNDERBIRD: 1,
-            PlaneType.SCRAPYARD_RESCUE: 1,
-            PlaneType.PIGEON: 10,
+            PlaneType.FLYING_FORTRESS: 3,
         }
     
     def steer_input(self, planes: dict[str, Plane]) -> dict[str, float]:
-        # Define a dictionary to hold our response
         response = dict()
 
-        # For each plane
         for id, plane in planes.items():
-            # id is the unique id of the plane, plane is a Plane object
-
-            # We can only control our own planes
             if plane.team == "enemy":
                 continue
-
-            # If we're within the first 5 turns, just set the steer to 0
-            if self.my_counter < 5:
-                response[id] = 0
+            if id not in self.my_steers:
+                self.my_steers[id] = -1
+                self.my_target[id] = 45
+                self.reached[id] = False
+                self.counter_since[id] = 0
             else:
-                # If we haven't initialized steers yet, generate a random one for this plane
-                if id not in self.my_steers:
-                    self.my_steers[id] = random.random() * 2 - 1
+                tolerance = 6
+                boundary = 45
+                counter_tol = 15
+                if plane.angle > self.my_target[id] + tolerance:
+                    self.my_steers[id] = -1
+                    self.counter_since[id] += 1
+                elif plane.angle < self.my_target[id] - tolerance:
+                    self.my_steers[id] = 1
+                    self.counter_since[id] += 1
+                else:
+                    self.my_steers[id] = 0
+                    self.reached[id] = True
+                    self.counter_since[id] += 1
+                if max(abs(plane.position.x), abs(plane.position.y)) > boundary and self.reached[id] and self.counter_since[id] > counter_tol:
+                    self.my_target[id] = (self.my_target[id] + 90)
+                    self.reached[id] = False
+                    self.counter_since[id] = 0
+            response[id] = self.my_steers[id]
 
-                # Set the steer for this plane to our previously decided steer
-                response[id] = self.my_steers[id]
-            self.my_counter += 1
+        self.my_counter += 1
+
+        # Return the steers
         return response

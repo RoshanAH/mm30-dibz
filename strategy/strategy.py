@@ -4,14 +4,15 @@ from game.plane import Plane, PlaneType
 
 from strategy.base import Base
 from strategy.balls import Balls
-# from strategy.amongus import Amongus
-
+from strategy.amongus import Amongus
+from strategy.bigballs import BigBalls
+from strategy.ballsreal import BallsReal
 # The following is the heart of your bot. This controls what your bot does.
 # Feel free to change the behavior to your heart's content.
 # You can also add other files under the strategy/ folder and import them
 
 class Strategy(BaseStrategy):
-    bots = (Balls(), Balls())
+    bots = (Balls(), BigBalls())
 
     def select_planes(self) -> dict[PlaneType, int]:
         print(f"team: {self.team}")
