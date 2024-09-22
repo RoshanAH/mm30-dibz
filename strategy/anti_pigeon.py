@@ -1,9 +1,7 @@
 from game.plane import Plane, PlaneType
 import math
-class AntiPigeon():
+class AntiPigeon:
 
-    def __init__(self, team):
-        self.team = team
     def select_planes(self) -> dict[PlaneType, int]:
         return {
             PlaneType.THUNDERBIRD: 5
@@ -29,17 +27,17 @@ class AntiPigeon():
         frens = {}
         enmys = {}
         for id, plane in planes.items():
-            if (plane.team == self.team):
+            if (plane.team == "friend"):
                 frens[id] = plane
             else:
                 enmys[id] = plane
         #target nearest Pigeon
-        for f_id, f_plane in frens:
+        for f_id, f_plane in frens.items():
             #find nearest Pigeon
             nearest = 150
             nearest_id = None
             fren_pos = (f_plane.position.x, f_plane.position.y)
-            for e_id, e_plane in enmys:
+            for e_id, e_plane in enmys.items():
                 enmy_pos = (e_plane.position.x, e_plane.position.y)
                 if math.dist(fren_pos,enmy_pos) < nearest:
                     nearest = math.dist(fren_pos, enmy_pos)
@@ -47,10 +45,11 @@ class AntiPigeon():
 
             enmy_pos = (enmys[nearest_id].position.x, enmys[nearest_id].position.y)
             turn = self.find_turn_to(f_plane.angle,fren_pos,enmy_pos)
-            if plane.PlaneStats.turn_speed > abs(turn):
+            if f_plane.stats.turn_speed > abs(turn):
                 if turn > 0:
                     ret_dict[f_id] = 1
                 if turn > 0:
                     ret_dict[f_id] = 1
-
+            ret_dict[f_id] = 1
+            print(ret_dict)
         return ret_dict

@@ -1,26 +1,36 @@
+import dataclasses
 from game.base_strategy import BaseStrategy
 from game.plane import Plane, PlaneType
-from strategy.pigeon import *
 from strategy.anti_pigeon import *
+
+
+#from strategy.base import Base
 
 # The following is the heart of your bot. This controls what your bot does.
 # Feel free to change the behavior to your heart's content.
 # You can also add other files under the strategy/ folder and import them
 
 class Strategy(BaseStrategy):
+    bots = (AntiPigeon(), AntiPigeon())
 
-    def __init__(self):
-        self.bot0 = AntiPigeon("0")
-        self.bot1 = AntiPigeon("1")
 
     def select_planes(self) -> dict[PlaneType, int]:
-        if (self.team == "0"):
-            return self.bot0.select_planes()
-        else:
-            return self.bot1.select_planes()
+        print(f"team: {self.team}")
+        return self.bots[int(self.team)].select_planes()
 
     def steer_input(self, planes: dict[str, Plane]) -> dict[str, float]:
-        if (self.team == "0"):
-            return self.bot0.steer_input(planes)
-        else:
-            return self.bot1.steer_input(planes)
+        return self.bots[int(self.team)].steer_input(map_planes(self.team, planes))
+
+
+def map_plane(team, plane: Plane) -> Plane:
+    out = dataclasses.replace(plane)
+    out.team = "friend" if team == plane.team else "enemy"
+    if team == "0":
+        out.angle = (out.angle + 180) % 360
+        out.position = -1 * out.position
+    return out
+
+
+
+def map_planes(team, planes: dict[str, Plane]) -> dict[str, Plane]:
+    return {id: map_plane(team, plane) for id, plane in planes.items()}
