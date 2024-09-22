@@ -21,7 +21,7 @@ class Plane:
                 Vector.deserialize(blob["position"]),
                 blob["angle"],
                 blob["health"],
-                blob["stats"]
+                PlaneStats.deserialize(blob["stats"])
             )
         except:
             print("Failed to validate plane json")

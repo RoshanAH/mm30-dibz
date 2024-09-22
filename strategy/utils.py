@@ -86,7 +86,7 @@ def get_path_offset(t: float, steer: float, init_angle: float, speed: float, min
     # init angle is the direction the plane faces, so we need to shift to get the angle where the plane
     # is on the turning circle
     if (steer == 0):
-        return (speed * math.cos(init_angle_rad), speed * math.sin(init_angle_rad), init_angle)
+        return Vector(speed * math.cos(init_angle_rad), speed * math.sin(init_angle_rad))
     elif (steer < 0):
         init_angle_rad += math.pi / 2
     else:
