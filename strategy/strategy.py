@@ -10,8 +10,8 @@ from strategy.balls import Balls
 # You can also add other files under the strategy/ folder and import them
 
 class Strategy(BaseStrategy):
-    bots = (formation.Formation(), Balls())
-    # bots = (Balls(), formation.Formation())
+    # bots = (formation.Formation(), Balls())
+    bots = (Balls(), formation.Formation())
 
     def select_planes(self) -> dict[PlaneType, int]:
         print(f"team: {self.team}")
